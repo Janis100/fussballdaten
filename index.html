@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fusballdaten – Fußballspieler, Vereine, Transfers und Statistiken aus aller Welt.">
+    <title>Fusballdaten – Die Fußball-Datenbank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="topbar">
+        <a href="#" class="logo">⚽ FUSSBALL<span>DATEN</span></a>
+        <nav>
+            <a href="#start">Startseite</a>
+            <a href="#spieler">Spieler</a>
+            <a href="#vereine">Vereine</a>
+            <a href="#statistiken">Statistiken</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero" id="start">
+    <div class="hero-content">
+        <p class="tag">DIE WELT DES FUSSBALLS</p>
+        <h1>Alle Fußballer.<br><span>Eine Datenbank.</span></h1>
+        <p>Entdecke Spieler, Vereine, Karrieren und Statistiken aus der ganzen Welt.</p>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Spieler, Verein oder Land suchen..."
+                aria-label="Fußballer suchen"
+            >
+            <button onclick="searchPlayers()">Suchen</button>
+        </div>
+    </div>
+</section>
+
+<main>
+    <section class="stats" id="statistiken">
+        <div class="stat-box">
+            <h2 id="playerCount">0</h2>
+            <p>Spieler in der Demo</p>
+        </div>
+        <div class="stat-box">
+            <h2>5</h2>
+            <p>Beispielländer</p>
+        </div>
+        <div class="stat-box">
+            <h2>2026</h2>
+            <p>Aktuelle Saison</p>
+        </div>
+    </section>
+
+    <section class="section" id="spieler">
+        <div class="section-heading">
+            <div>
+                <p class="tag">ENTDECKE DIE FUSSBALLWELT</p>
+                <h2>Spielerdatenbank</h2>
+            </div>
+            <select id="positionFilter" onchange="searchPlayers()">
+                <option value="">Alle Positionen</option>
+                <option value="Stürmer">Stürmer</option>
+                <option value="Mittelfeld">Mittelfeld</option>
+                <option value="Abwehr">Abwehr</option>
+                <option value="Torwart">Torwart</option>
+            </select>
+        </div>
+
+        <div class="player-grid" id="playerGrid"></div>
+
+        <p id="noResults" class="no-results" hidden>
+            Keine passenden Spieler gefunden.
+        </p>
+    </section>
+
+    <section class="section clubs" id="vereine">
+        <p class="tag">INTERNATIONAL</p>
+        <h2>Vereine entdecken</h2>
+        <div class="club-grid">
+            <div class="club-card">🔴 Real Madrid</div>
+            <div class="club-card">🔵 FC Barcelona</div>
+            <div class="club-card">🔴 FC Bayern München</div>
+            <div class="club-card">🔵 Manchester City</div>
+            <div class="club-card">🔴 Liverpool FC</div>
+            <div class="club-card">⚫ Inter Mailand</div>
+        </div>
+    </section>
+</main>
+
+<div id="playerModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+        <button class="close" onclick="closeModal()" aria-label="Schließen">&times;</button>
+        <div id="playerDetails"></div>
+    </div>
+</div>
+
+<footer>
+    <h2>⚽ FUSSBALLDATEN</h2>
+    <p>Die Welt des Fußballs an einem Ort.</p>
+    <p class="copyright">© 2026 Fusballdaten. Alle Rechte vorbehalten.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
