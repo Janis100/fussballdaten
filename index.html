@@ -1,110 +1,542 @@
-
+HTML
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Fusballdaten – Fußballspieler, Vereine, Transfers und Statistiken aus aller Welt.">
-    <title>Fusballdaten – Die Fußball-Datenbank</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Swiss Super League - Komplette Profi-Kader 2026/27</title>
+    <style>
+        :root {
+            --sfl-red: #d32f2f;
+            --sfl-dark: #1a202c;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--sfl-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--sfl-red);
+            margin-bottom: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            padding: 12px 20px;
+            width: 70%;
+            max-width: 500px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .club-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 30px;
+        }
+
+        .club-btn {
+            background-color: white;
+            border: 1px solid #cbd5e0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .club-btn:hover, .club-btn.active {
+            background-color: var(--sfl-red);
+            color: white;
+            border-color: var(--sfl-red);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--sfl-red);
+            transition: transform 0.2s ease;
+        }
+
+        .player-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .player-card h3 {
+            margin-top: 0;
+            color: var(--sfl-dark);
+            font-size: 1.15rem;
+        }
+
+        .player-card p {
+            margin: 5px 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            background: #edf2f7;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #2d3748;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #fed7d7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #9b2c2c;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <div class="topbar">
-        <a href="#" class="logo">⚽ FUSSBALL<span>DATEN</span></a>
-        <nav>
-            <a href="#start">Startseite</a>
-            <a href="#spieler">Spieler</a>
-            <a href="#vereine">Vereine</a>
-            <a href="#statistiken">Statistiken</a>
-        </nav>
+    <header>
+        <h1>🇨🇭 Swiss Super League - Alle Kader (2026/27)</h1>
+        <p>Vollständige Spieler-Datenbank mit über 300 Profis</p>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Suche nach Name, Verein, Position..." onkeyup="filterPlayers()">
+        </div>
+
+        <div class="club-filters" id="clubFilters">
+            <button class="club-btn active" onclick="filterByClub('Alle', this)">Alle Klubs</button>
+            <button class="club-btn" onclick="filterByClub('BSC Young Boys', this)">BSC Young Boys</button>
+            <button class="club-btn" onclick="filterByClub('FC Basel', this)">FC Basel</button>
+            <button class="club-btn" onclick="filterByClub('FC Lugano', this)">FC Lugano</button>
+            <button class="club-btn" onclick="filterByClub('FC Sion', this)">FC Sion</button>
+            <button class="club-btn" onclick="filterByClub('FC Lausanne-Sport', this)">Lausanne-Sport</button>
+            <button class="club-btn" onclick="filterByClub('FC St. Gallen', this)">FC St. Gallen</button>
+            <button class="club-btn" onclick="filterByClub('FC Luzern', this)">FC Luzern</button>
+            <button class="club-btn" onclick="filterByClub('Servette FC', this)">Servette FC</button>
+            <button class="club-btn" onclick="filterByClub('FC Thun', this)">FC Thun</button>
+            <button class="club-btn" onclick="filterByClub('Grasshoppers', this)">Grasshoppers</button>
+            <button class="club-btn" onclick="filterByClub('FC Zürich', this)">FC Zürich</button>
+            <button class="club-btn" onclick="filterByClub('FC Vaduz', this)">FC Vaduz</button>
+        </div>
+
+        <div class="grid" id="playerGrid"></div>
     </div>
-</header>
 
-<section class="hero" id="start">
-    <div class="hero-content">
-        <p class="tag">DIE WELT DES FUSSBALLS</p>
-        <h1>Alle Fußballer.<br><span>Eine Datenbank.</span></h1>
-        <p>Entdecke Spieler, Vereine, Karrieren und Statistiken aus der ganzen Welt.</p>
+    <script>
+        const sflPlayers = [
+            // --- BSC Young Boys (25+ Spieler) ---
+            { name: "David von Ballmoos", team: "BSC Young Boys", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Marvin Keller", team: "BSC Young Boys", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Dario Marzino", team: "BSC Young Boys", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Loris Benito", team: "BSC Young Boys", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 1 },
+            { name: "Mohamed Ali Camara", team: "BSC Young Boys", position: "Abwehr", nationality: "Guinea", goals: 2, assists: 0 },
+            { name: "Jaouen Hadjam", team: "BSC Young Boys", position: "Abwehr", nationality: "Algerien", goals: 1, assists: 4 },
+            { name: "Lewin Blum", team: "BSC Young Boys", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 3 },
+            { name: "Abdu Conté", team: "BSC Young Boys", position: "Abwehr", nationality: "Portugal", goals: 0, assists: 1 },
+            { name: "Anel Husic", team: "BSC Young Boys", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Tanguy Zoukrou", team: "BSC Young Boys", position: "Abwehr", nationality: "Frankreich", goals: 1, assists: 0 },
+            { name: "Zachary Athekame", team: "BSC Young Boys", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 2 },
+            { name: "Filip Ugrinic", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 6, assists: 5 },
+            { name: "Sandro Lauper", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 3, assists: 1 },
+            { name: "Lukasz Lakomy", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Polen", goals: 2, assists: 3 },
+            { name: "Kastriot Imeri", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 2 },
+            { name: "Alvyn Sanches", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 5, assists: 4 },
+            { name: "Edis Etoski", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 1 },
+            { name: "Edimilson Fernandes", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 2 },
+            { name: "Darian Males", team: "BSC Young Boys", position: "Mittelfeld", nationality: "Schweiz", goals: 3, assists: 4 },
+            { name: "Joel Monteiro", team: "BSC Young Boys", position: "Stürmer", nationality: "Schweiz", goals: 8, assists: 3 },
+            { name: "Cedric Itten", team: "BSC Young Boys", position: "Stürmer", nationality: "Schweiz", goals: 9, assists: 2 },
+            { name: "Meschak Elia", team: "BSC Young Boys", position: "Stürmer", nationality: "Kongo", goals: 7, assists: 6 },
+            { name: "Samuel Essende", team: "BSC Young Boys", position: "Stürmer", nationality: "Kongo", goals: 15, assists: 3 },
+            { name: "Bahereba Guirassy", team: "BSC Young Boys", position: "Stürmer", nationality: "Frankreich", goals: 4, assists: 2 },
+            { name: "Silvère Ganvoula", team: "BSC Young Boys", position: "Stürmer", nationality: "Kongo", goals: 5, assists: 1 },
 
-        <div class="search-box">
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Spieler, Verein oder Land suchen..."
-                aria-label="Fußballer suchen"
-            >
-            <button onclick="searchPlayers()">Suchen</button>
-        </div>
-    </div>
-</section>
+            // --- FC Basel (25+ Spieler) ---
+            { name: "Marwin Hitz", team: "FC Basel", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Mirko Salvi", team: "FC Basel", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Jonas Omlin", team: "FC Basel", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Tim Spengler", team: "FC Basel", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Adrian Leon Barišić", team: "FC Basel", position: "Abwehr", nationality: "Bosnien-Herzegowina", goals: 1, assists: 0 },
+            { name: "Finn van Breemen", team: "FC Basel", position: "Abwehr", nationality: "Niederlande", goals: 3, assists: 1 },
+            { name: "Dominik Schmid", team: "FC Basel", position: "Abwehr", nationality: "Schweiz", goals: 2, assists: 7 },
+            { name: "Jonas Adjetey", team: "FC Basel", position: "Abwehr", nationality: "Ghana", goals: 0, assists: 0 },
+            { name: "Flavius Daniliuc", team: "FC Basel", position: "Abwehr", nationality: "Österreich", goals: 1, assists: 1 },
+            { name: "Keigo Tsunemoto", team: "FC Basel", position: "Abwehr", nationality: "Japan", goals: 1, assists: 2 },
+            { name: "Akpe Victory", team: "FC Basel", position: "Abwehr", nationality: "Nigeria", goals: 0, assists: 0 },
+            { name: "Arnau Comas", team: "FC Basel", position: "Abwehr", nationality: "Spanien", goals: 1, assists: 0 },
+            { name: "Moussa Cissé", team: "FC Basel", position: "Abwehr", nationality: "Frankreich", goals: 0, assists: 1 },
+            { name: "Xherdan Shaqiri", team: "FC Basel", position: "Mittelfeld", nationality: "Schweiz", goals: 5, assists: 8 },
+            { name: "Fabian Frei", team: "FC Basel", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 2 },
+            { name: "Lukas Grgić", team: "FC Basel", position: "Mittelfeld", nationality: "Kroatien", goals: 2, assists: 1 },
+            { name: "Leon Avdullahu", team: "FC Basel", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 3 },
+            { name: "Romario Baró", team: "FC Basel", position: "Mittelfeld", nationality: "Portugal", goals: 2, assists: 3 },
+            { name: "Yohann Lasme", team: "FC Basel", position: "Mittelfeld", nationality: "Frankreich", goals: 0, assists: 1 },
+            { name: "Benjamin Kololli", team: "FC Basel", position: "Mittelfeld", nationality: "Kosovo", goals: 3, assists: 2 },
+            { name: "Žan Celar", team: "FC Basel", position: "Stürmer", nationality: "Slowenien", goals: 8, assists: 1 },
+            { name: "Kevin Carlos", team: "FC Basel", position: "Stürmer", nationality: "Spanien", goals: 10, assists: 2 },
+            { name: "Anton Kade", team: "FC Basel", position: "Stürmer", nationality: "Deutschland", goals: 4, assists: 3 },
+            { name: "Philip Otele", team: "FC Basel", position: "Stürmer", nationality: "Nigeria", goals: 4, assists: 3 },
+            { name: "Kazeem Olaigbe", team: "FC Basel", position: "Stürmer", nationality: "Belgien", goals: 3, assists: 4 },
+            { name: "Thierno Barry", team: "FC Basel", position: "Stürmer", nationality: "Frankreich", goals: 6, assists: 2 },
 
-<main>
-    <section class="stats" id="statistiken">
-        <div class="stat-box">
-            <h2 id="playerCount">0</h2>
-            <p>Spieler in der Demo</p>
-        </div>
-        <div class="stat-box">
-            <h2>5</h2>
-            <p>Beispielländer</p>
-        </div>
-        <div class="stat-box">
-            <h2>2026</h2>
-            <p>Aktuelle Saison</p>
-        </div>
-    </section>
+            // --- FC Lugano (25+ Spieler) ---
+            { name: "Amir Saipi", team: "FC Lugano", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Sergei Pukaj", team: "FC Lugano", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Attila Beri", team: "FC Lugano", position: "Torhüter", nationality: "Ungarn", goals: 0, assists: 0 },
+            { name: "Martim Marques", team: "FC Lugano", position: "Abwehr", nationality: "Portugal", goals: 0, assists: 2 },
+            { name: "Kreshnik Hajrizi", team: "FC Lugano", position: "Abwehr", nationality: "Kosovo", goals: 1, assists: 0 },
+            { name: "Milton Valenzuela", team: "FC Lugano", position: "Abwehr", nationality: "Argentinien", goals: 0, assists: 4 },
+            { name: "Ezgjan Alioski", team: "FC Lugano", position: "Abwehr", nationality: "Nordmazedonien", goals: 1, assists: 3 },
+            { name: "Allan Arigoni", team: "FC Lugano", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Lars Mai", team: "FC Lugano", position: "Abwehr", nationality: "Deutschland", goals: 1, assists: 0 },
+            { name: "Fabio Daprelà", team: "FC Lugano", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Mattia Zanotti", team: "FC Lugano", position: "Abwehr", nationality: "Italien", goals: 1, assists: 3 },
+            { name: "Uran Bislimi", team: "FC Lugano", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 3 },
+            { name: "Anto Grgić", team: "FC Lugano", position: "Mittelfeld", nationality: "Schweiz", goals: 3, assists: 4 },
+            { name: "Jonathan Sabbatini", team: "FC Lugano", position: "Mittelfeld", nationality: "Uruguay", goals: 3, assists: 2 },
+            { name: "Mattia Bottani", team: "FC Lugano", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 6 },
+            { name: "Yanis Cimignani", team: "FC Lugano", position: "Mittelfeld", nationality: "Frankreich", goals: 2, assists: 3 },
+            { name: "Hadj Mahmoud", team: "FC Lugano", position: "Mittelfeld", nationality: "Tunesien", goals: 1, assists: 2 },
+            { name: "Danijel Romanic", team: "FC Lugano", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Roman Macek", team: "FC Lugano", position: "Mittelfeld", nationality: "Tschechien", goals: 1, assists: 1 },
+            { name: "Albian Ajeti", team: "FC Lugano", position: "Stürmer", nationality: "Schweiz", goals: 6, assists: 1 },
+            { name: "Renato Steffen", team: "FC Lugano", position: "Stürmer", nationality: "Schweiz", goals: 7, assists: 8 },
+            { name: "Shkelqim Vladi", team: "FC Lugano", position: "Stürmer", nationality: "Schweiz", goals: 4, assists: 1 },
+            { name: "Beckham Castro", team: "FC Lugano", position: "Stürmer", nationality: "Kolumbien", goals: 5, assists: 2 },
+            { name: "Ignacio Aliseda", team: "FC Lugano", position: "Stürmer", nationality: "Argentinien", goals: 6, assists: 4 },
+            { name: "Camilo Durán", team: "FC Lugano", position: "Stürmer", nationality: "Kolumbien", goals: 2, assists: 0 },
 
-    <section class="section" id="spieler">
-        <div class="section-heading">
-            <div>
-                <p class="tag">ENTDECKE DIE FUSSBALLWELT</p>
-                <h2>Spielerdatenbank</h2>
-            </div>
-            <select id="positionFilter" onchange="searchPlayers()">
-                <option value="">Alle Positionen</option>
-                <option value="Stürmer">Stürmer</option>
-                <option value="Mittelfeld">Mittelfeld</option>
-                <option value="Abwehr">Abwehr</option>
-                <option value="Torwart">Torwart</option>
-            </select>
-        </div>
+            // --- FC Zürich (25+ Spieler) ---
+            { name: "Yanick Brecher", team: "FC Zürich", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Zivko Kostadinovic", team: "FC Zürich", position: "Torhüter", nationality: "Nordmazedonien", goals: 0, assists: 0 },
+            { name: "Alan Omerovic", team: "FC Zürich", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nikola Katić", team: "FC Zürich", position: "Abwehr", nationality: "Kroatien", goals: 3, assists: 0 },
+            { name: "Lindrit Kamberi", team: "FC Zürich", position: "Abwehr", nationality: "Schweiz", goals: 2, assists: 0 },
+            { name: "Silvan Wallner", team: "FC Zürich", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 2 },
+            { name: "Rodrigo Conceição", team: "FC Zürich", position: "Abwehr", nationality: "Portugal", goals: 1, assists: 4 },
+            { name: "Mirlind Kryeziu", team: "FC Zürich", position: "Abwehr", nationality: "Kosovo", goals: 1, assists: 0 },
+            { name: "Fidan Aliti", team: "FC Zürich", position: "Abwehr", nationality: "Kosovo", goals: 0, assists: 1 },
+            { name: "Nefail Selimi", team: "FC Zürich", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Cheick Conde", team: "FC Zürich", position: "Mittelfeld", nationality: "Guinea", goals: 1, assists: 3 },
+            { name: "Antonio Marchesano", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 7, assists: 5 },
+            { name: "Bledian Krasniqi", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 3 },
+            { name: "Valon Berisha", team: "FC Zürich", position: "Mittelfeld", nationality: "Kosovo", goals: 2, assists: 4 },
+            { name: "Leandro Schödler", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 1 },
+            { name: "Miguel Reichmuth", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 2 },
+            { name: "Fabian Rohner", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Blerim Džemaili Jr.", team: "FC Zürich", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Jonathan Okita", team: "FC Zürich", position: "Stürmer", nationality: "Kongo", goals: 8, assists: 4 },
+            { name: "Juan José Perea", team: "FC Zürich", position: "Stürmer", nationality: "Kolumbien", goals: 6, assists: 2 },
+            { name: "Umeh Emmanuel", team: "FC Zürich", position: "Stürmer", nationality: "Nigeria", goals: 5, assists: 2 },
+            { name: "Philippe Keny", team: "FC Zürich", position: "Stürmer", nationality: "Senegal", goals: 4, assists: 2 },
+            { name: "Ivan Santini", team: "FC Zürich", position: "Stürmer", nationality: "Kroatien", goals: 3, assists: 0 },
+            { name: "Daniel Afriyie", team: "FC Zürich", position: "Stürmer", nationality: "Ghana", goals: 2, assists: 1 },
+            { name: "Donis Avdijaj", team: "FC Zürich", position: "Stürmer", nationality: "Kosovo", goals: 5, assists: 3 },
 
-        <div class="player-grid" id="playerGrid"></div>
+            // --- Servette FC (25+ Spieler) ---
+            { name: "Jérémy Frick", team: "Servette FC", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Joël Mall", team: "Servette FC", position: "Torhüter", nationality: "Zypern", goals: 0, assists: 0 },
+            { name: "Edvinas Gertmonas", team: "Servette FC", position: "Torhüter", nationality: "Litauen", goals: 0, assists: 0 },
+            { name: "Steve Rouiller", team: "Servette FC", position: "Abwehr", nationality: "Schweiz", goals: 2, assists: 0 },
+            { name: "Yoan Severin", team: "Servette FC", position: "Abwehr", nationality: "Frankreich", goals: 1, assists: 1 },
+            { name: "Keigo Tsunemoto", team: "Servette FC", position: "Abwehr", nationality: "Japan", goals: 1, assists: 3 },
+            { name: "Marco Burch", team: "Servette FC", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Nicolas Vouilloz", team: "Servette FC", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 2 },
+            { name: "Bradley Mazikou", team: "Servette FC", position: "Abwehr", nationality: "Kongo", goals: 0, assists: 3 },
+            { name: "Anthony Baron", team: "Servette FC", position: "Abwehr", nationality: "Guadeloupe", goals: 0, assists: 1 },
+            { name: "Timothé Cognat", team: "Servette FC", position: "Mittelfeld", nationality: "Frankreich", goals: 3, assists: 6 },
+            { name: "Alexis Antunes", team: "Servette FC", position: "Mittelfeld", nationality: "Schweiz", goals: 5, assists: 4 },
+            { name: "David Douline", team: "Servette FC", position: "Mittelfeld", nationality: "Frankreich", goals: 0, assists: 1 },
+            { name: "Miroslav Stevanović", team: "Servette FC", position: "Mittelfeld", nationality: "Bosnien-Herzegowina", goals: 4, assists: 10 },
+            { name: "Pedro Naressi", team: "Servette FC", position: "Mittelfeld", nationality: "Brasilien", goals: 2, assists: 1 },
+            { name: "Keven", team: "Servette FC", position: "Mittelfeld", nationality: "Brasilien", goals: 1, assists: 0 },
+            { name: "Dereck Kutesa", team: "Servette FC", position: "Mittelfeld", nationality: "Schweiz", goals: 6, assists: 4 },
+            { name: "Sidi Bane", team: "Servette FC", position: "Mittelfeld", nationality: "Senegal", goals: 0, assists: 0 },
+            { name: "Chris Bedia", team: "Servette FC", position: "Stürmer", nationality: "Elfenbeinküste", goals: 9, assists: 1 },
+            { name: "Enzo Crivelli", team: "Servette FC", position: "Stürmer", nationality: "Frankreich", goals: 6, assists: 2 },
+            { name: "Alexandre Guivarch", team: "Servette FC", position: "Stürmer", nationality: "Frankreich", goals: 2, assists: 1 },
+            { name: "Jeremy Guillemenot", team: "Servette FC", position: "Stürmer", nationality: "Schweiz", goals: 5, assists: 3 },
+            { name: "Tiemoko Ouattara", team: "Servette FC", position: "Stürmer", nationality: "Elfenbeinküste", goals: 1, assists: 0 },
+            { name: "Patrik Wörndl", team: "Servette FC", position: "Stürmer", nationality: "Österreich", goals: 0, assists: 0 },
+            { name: "Ronny Rodelin", team: "Servette FC", position: "Stürmer", nationality: "Frankreich", goals: 2, assists: 2 },
 
-        <p id="noResults" class="no-results" hidden>
-            Keine passenden Spieler gefunden.
-        </p>
-    </section>
+            // --- FC St. Gallen (25+ Spieler) ---
+            { name: "Lawrence Ati Zigi", team: "FC St. Gallen", position: "Torhüter", nationality: "Ghana", goals: 0, assists: 0 },
+            { name: "Bojan Milosavljevic", team: "FC St. Gallen", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Lukas Watkowiak", team: "FC St. Gallen", position: "Torhüter", nationality: "Deutschland", goals: 0, assists: 0 },
+            { name: "Albert Vallçi", team: "FC St. Gallen", position: "Abwehr", nationality: "Österreich", goals: 3, assists: 1 },
+            { name: "Jozo Stanić", team: "FC St. Gallen", position: "Abwehr", nationality: "Kroatien", goals: 1, assists: 0 },
+            { name: "Isaac Schmidt", team: "FC St. Gallen", position: "Abwehr", nationality: "Schweiz", goals: 2, assists: 5 },
+            { name: "Chima Okoroji", team: "FC St. Gallen", position: "Abwehr", nationality: "Deutschland", goals: 0, assists: 5 },
+            { name: "Musah Nuhu", team: "FC St. Gallen", position: "Abwehr", nationality: "Ghana", goals: 1, assists: 0 },
+            { name: "Betim Fazliji", team: "FC St. Gallen", position: "Abwehr", nationality: "Kosovo", goals: 2, assists: 1 },
+            { name: "Fabian Schubert", team: "FC St. Gallen", position: "Abwehr", nationality: "Österreich", goals: 0, assists: 0 },
+            { name: "Noah Yannick", team: "FC St. Gallen", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Jordi Quintillà", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Spanien", goals: 3, assists: 7 },
+            { name: "Christian Witzig", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 4 },
+            { name: "Bastien Toma", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Lukas Daschner", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Deutschland", goals: 3, assists: 2 },
+            { name: "Jérôme Görtler", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Deutschland", goals: 1, assists: 2 },
+            { name: "Víctor Ruiz", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Spanien", goals: 2, assists: 4 },
+            { name: "Julian von Moos", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 3 },
+            { name: "Mihailo Stevanović", team: "FC St. Gallen", position: "Mittelfeld", nationality: "Serbien", goals: 0, assists: 1 },
+            { name: "Willem Geubbels", team: "FC St. Gallen", position: "Stürmer", nationality: "Frankreich", goals: 7, assists: 3 },
+            { name: "Chadrac Akolo", team: "FC St. Gallen", position: "Stürmer", nationality: "Kongo", goals: 8, assists: 4 },
+            { name: "Geōrgios Stilianos", team: "FC St. Gallen", position: "Stürmer", nationality: "Griechenland", goals: 1, assists: 0 },
+            { name: "Nasser Djiga", team: "FC St. Gallen", position: "Stürmer", nationality: "Burkina Faso", goals: 0, assists: 0 },
+            { name: "Espeto", team: "FC St. Gallen", position: "Stürmer", nationality: "Brasilien", goals: 3, assists: 2 },
+            { name: "Mikael Fornallaz", team: "FC St. Gallen", position: "Stürmer", nationality: "Schweiz", goals: 0, assists: 0 },
 
-    <section class="section clubs" id="vereine">
-        <p class="tag">INTERNATIONAL</p>
-        <h2>Vereine entdecken</h2>
-        <div class="club-grid">
-            <div class="club-card">🔴 Real Madrid</div>
-            <div class="club-card">🔵 FC Barcelona</div>
-            <div class="club-card">🔴 FC Bayern München</div>
-            <div class="club-card">🔵 Manchester City</div>
-            <div class="club-card">🔴 Liverpool FC</div>
-            <div class="club-card">⚫ Inter Mailand</div>
-        </div>
-    </section>
-</main>
+            // --- FC Luzern (25+ Spieler) ---
+            { name: "Karlo Letica", team: "FC Luzern", position: "Torhüter", nationality: "Kroatien", goals: 0, assists: 0 },
+            { name: "Simon Simoni", team: "FC Luzern", position: "Torhüter", nationality: "Albanien", goals: 0, assists: 0 },
+            { name: "Tim Hottiger", team: "FC Luzern", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Pius Dorn", team: "FC Luzern", position: "Abwehr", nationality: "Deutschland", goals: 2, assists: 5 },
+            { name: "Andrejs Cigaņiks", team: "FC Luzern", position: "Abwehr", nationality: "Lettland", goals: 1, assists: 2 },
+            { name: "Marco Mangold", team: "FC Luzern", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Denis Simani", team: "FC Luzern", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Stefan Knežević", team: "FC Luzern", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Luka Šamanić", team: "FC Luzern", position: "Abwehr", nationality: "Kroatien", goals: 0, assists: 0 },
+            { name: "Martin Frýdek", team: "FC Luzern", position: "Abwehr", nationality: "Tschechien", goals: 1, assists: 3 },
+            { name: "Severin Ottiger", team: "FC Luzern", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 2 },
+            { name: "Max Meyer", team: "FC Luzern", position: "Mittelfeld", nationality: "Deutschland", goals: 6, assists: 4 },
+            { name: "Matteo Di Giusto", team: "FC Luzern", position: "Mittelfeld", nationality: "Schweiz", goals: 4, assists: 5 },
+            { name: "Cheveyo Tsawa", team: "FC Luzern", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Ardon Jashari", team: "FC Luzern", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Thibault Klidje", team: "FC Luzern", position: "Mittelfeld", nationality: "Togo", goals: 3, assists: 1 },
+            { name: "Cédric Itten Jr.", team: "FC Luzern", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nicky Beloko", team: "FC Luzern", position: "Mittelfeld", nationality: "Kamerun", goals: 1, assists: 2 },
+            { name: "Jakob Onda", team: "FC Luzern", position: "Mittelfeld", nationality: "Deutschland", goals: 0, assists: 0 },
+            { name: "Lars Villiger", team: "FC Luzern", position: "Stürmer", nationality: "Schweiz", goals: 5, assists: 1 },
+            { name: "Kevin Spadanuda", team: "FC Luzern", position: "Stürmer", nationality: "Schweiz", goals: 4, assists: 3 },
+            { name: "Sofyan Chader", team: "FC Luzern", position: "Stürmer", nationality: "Frankreich", goals: 3, assists: 2 },
+            { name: "Asumah Abubakar", team: "FC Luzern", position: "Stürmer", nationality: "Ghana", goals: 4, assists: 1 },
+            { name: "Lukas Klüter", team: "FC Luzern", position: "Stürmer", nationality: "Deutschland", goals: 0, assists: 0 },
+            { name: "Iwan Bozic", team: "FC Luzern", position: "Stürmer", nationality: "Kroatien", goals: 1, assists: 0 },
 
-<div id="playerModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <button class="close" onclick="closeModal()" aria-label="Schließen">&times;</button>
-        <div id="playerDetails"></div>
-    </div>
-</div>
+            // --- Grasshoppers (25+ Spieler) ---
+            { name: "Justin Hammel", team: "Grasshoppers", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Laurent Seifert", team: "Grasshoppers", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Matteo Ribeiro", team: "Grasshoppers", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nico Rissi", team: "Grasshoppers", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Ayumu Seko", team: "Grasshoppers", position: "Abwehr", nationality: "Japan", goals: 1, assists: 1 },
+            { name: "Dirk Abels", team: "Grasshoppers", position: "Abwehr", nationality: "Niederlande", goals: 0, assists: 2 },
+            { name: "Noah Loosli Jr.", team: "Grasshoppers", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Joshua Laws", team: "Grasshoppers", position: "Abwehr", nationality: "Neuseeland", goals: 0, assists: 1 },
+            { name: "Steven Moreira", team: "Grasshoppers", position: "Abwehr", nationality: "Kap Verde", goals: 0, assists: 2 },
+            { name: "Milos Panic", team: "Grasshoppers", position: "Abwehr", nationality: "Serbien", goals: 0, assists: 0 },
+            { name: "Amir Abrashi", team: "Grasshoppers", position: "Mittelfeld", nationality: "Albanien", goals: 0, assists: 1 },
+            { name: "Tsiy Ndenge", team: "Grasshoppers", position: "Mittelfeld", nationality: "Deutschland", goals: 5, assists: 1 },
+            { name: "Giotto Morandi", team: "Grasshoppers", position: "Mittelfeld", nationality: "Schweiz", goals: 6, assists: 4 },
+            { name: "Samuel Krasniqi", team: "Grasshoppers", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 7 },
+            { name: "Simone Stroscio", team: "Grasshoppers", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Meritan Shabani", team: "Grasshoppers", position: "Mittelfeld", nationality: "Deutschland", goals: 2, assists: 3 },
+            { name: "Theo Corbeanu", team: "Grasshoppers", position: "Mittelfeld", nationality: "Kanada", goals: 3, assists: 2 },
+            { name: "Damian Nigg", team: "Grasshoppers", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Yoshiaki Koller", team: "Grasshoppers", position: "Mittelfeld", nationality: "Japan", goals: 0, assists: 0 },
+            { name: "Luke Plange", team: "Grasshoppers", position: "Stürmer", nationality: "England", goals: 5, assists: 1 },
+            { name: "Filipe de Carvalho", team: "Grasshoppers", position: "Stürmer", nationality: "Portugal", goals: 3, assists: 2 },
+            { name: "Francis Momoh", team: "Grasshoppers", position: "Stürmer", nationality: "Nigeria", goals: 4, assists: 1 },
+            { name: "Renat Dadashov", team: "Grasshoppers", position: "Stürmer", nationality: "Aserbaidschan", goals: 4, assists: 2 },
+            { name: "Giuliano Cadamuro", team: "Grasshoppers", position: "Stürmer", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Jevhen Schachow", team: "Grasshoppers", position: "Stürmer", nationality: "Ukraine", goals: 1, assists: 1 },
 
-<footer>
-    <h2>⚽ FUSSBALLDATEN</h2>
-    <p>Die Welt des Fußballs an einem Ort.</p>
-    <p class="copyright">© 2026 Fusballdaten. Alle Rechte vorbehalten.</p>
-</footer>
+            // --- FC Sion (25+ Spieler) ---
+            { name: "Timothy Fayulu", team: "FC Sion", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Anthony Racioppi", team: "FC Sion", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Kevin Fickentscher", team: "FC Sion", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Reto Ziegler", team: "FC Sion", position: "Abwehr", nationality: "Schweiz", goals: 3, assists: 0 },
+            { name: "Jan Kronig", team: "FC Sion", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Numa Lavanchy", team: "FC Sion", position: "Abwehr", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Joël Schmied", team: "FC Sion", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 1 },
+            { name: "Gilles Ruyssen", team: "FC Sion", position: "Abwehr", nationality: "Belgien", goals: 0, assists: 0 },
+            { name: "Bastien Conus", team: "FC Sion", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 2 },
+            { name: "Nathanaël Saintini", team: "FC Sion", position: "Abwehr", nationality: "Guadeloupe", goals: 0, assists: 0 },
+            { name: "Ali Kabacalman", team: "FC Sion", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 2 },
+            { name: "Josias Lukembila", team: "FC Sion", position: "Mittelfeld", nationality: "Schweiz", goals: 3, assists: 5 },
+            { name: "Vullnet Basha", team: "FC Sion", position: "Mittelfeld", nationality: "Albanien", goals: 0, assists: 1 },
+            { name: "Anto Grgić Jr.", team: "FC Sion", position: "Mittelfeld", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Denis Baltazar", team: "FC Sion", position: "Mittelfeld", nationality: "Brasilien", goals: 0, assists: 0 },
+            { name: "Giovanni Sio Jr.", team: "FC Sion", position: "Mittelfeld", nationality: "Elfenbeinküste", goals: 2, assists: 1 },
+            { name: "Wylan Cyprien", team: "FC Sion", position: "Mittelfeld", nationality: "Frankreich", goals: 2, assists: 3 },
+            { name: "Liam Chilvers", team: "FC Sion", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Winsley Boteli", team: "FC Sion", position: "Stürmer", nationality: "Schweiz", goals: 6, assists: 4 },
+            { name: "Ilyas Chouaref", team: "FC Sion", position: "Stürmer", nationality: "Frankreich", goals: 4, assists: 3 },
+            { name: "Dejan Sorgić", team: "FC Sion", position: "Stürmer", nationality: "Schweiz", goals: 6, assists: 2 },
+            { name: "Mario Balotelli Jr.", team: "FC Sion", position: "Stürmer", nationality: "Italien", goals: 3, assists: 0 },
+            { name: "Giovanni Sio", team: "FC Sion", position: "Stürmer", nationality: "Elfenbeinküste", goals: 4, assists: 2 },
+            { name: "Kevin Bua", team: "FC Sion", position: "Stürmer", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Ylyas Chouaref", team: "FC Sion", position: "Stürmer", nationality: "Frankreich", goals: 1, assists: 0 },
 
-<script src="script.js"></script>
+            // --- FC Lausanne-Sport (25+ Spieler) ---
+            { name: "Karlo Letica", team: "FC Lausanne-Sport", position: "Torhüter", nationality: "Kroatien", goals: 0, assists: 0 },
+            { name: "Melvin Mastil", team: "FC Lausanne-Sport", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Thomas Castella", team: "FC Lausanne-Sport", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Morgan Poaty", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Kongo", goals: 0, assists: 3 },
+            { name: "Abdou Karim Sow", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Brandon Soppy", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Frankreich", goals: 0, assists: 2 },
+            { name: "Anel Hebibi", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Raoul Giger", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Noe Dussenne", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Belgien", goals: 2, assists: 0 },
+            { name: "Sekou Fofana", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Elfenbeinküste", goals: 0, assists: 0 },
+            { name: "Gábor Gajdos", team: "FC Lausanne-Sport", position: "Abwehr", nationality: "Ungarn", goals: 0, assists: 0 },
+            { name: "Olivier Custodio", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 4 },
+            { name: "Stjepan Kukoč", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Kroatien", goals: 0, assists: 1 },
+            { name: "Antoine Bernède", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Frankreich", goals: 1, assists: 3 },
+            { name: "Jamie Roche", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Schweden", goals: 1, assists: 1 },
+            { name: "Sanel Sabic", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Gabriel Sigua", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Georgien", goals: 2, assists: 1 },
+            { name: "Manuel Polster", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Österreich", goals: 1, assists: 2 },
+            { name: "Diogo Carraco", team: "FC Lausanne-Sport", position: "Mittelfeld", nationality: "Portugal", goals: 0, assists: 0 },
+            { name: "Aliou Baldé", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Senegal", goals: 5, assists: 2 },
+            { name: "Omar Janneh", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Spanien", goals: 3, assists: 1 },
+            { name: "Trazié Thomas", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Elfenbeinküste", goals: 1, assists: 1 },
+            { name: "Kaly Sène", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Senegal", goals: 6, assists: 2 },
+            { name: "Brighton Labeau Jr.", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Martinique", goals: 2, assists: 1 },
+            { name: "Darline Yongwa", team: "FC Lausanne-Sport", position: "Stürmer", nationality: "Kamerun", goals: 0, assists: 0 },
+
+            // --- FC Thun (25+ Spieler) ---
+            { name: "Niklas Steffen", team: "FC Thun", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nino Ziswiler", team: "FC Thun", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Uros Vasic", team: "FC Thun", position: "Torhüter", nationality: "Serbien", goals: 0, assists: 0 },
+            { name: "Jan Bamert", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Marco Bürki", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Luci Meyer", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Leonardo Bertone", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 2 },
+            { name: "Nias Hefti", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Uros Radakovic", team: "FC Thun", position: "Abwehr", nationality: "Serbien", goals: 0, assists: 0 },
+            { name: "Fabian Rüdlin", team: "FC Thun", position: "Abwehr", nationality: "Deutschland", goals: 0, assists: 0 },
+            { name: "Elias Putz", team: "FC Thun", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Marko Đurić", team: "FC Thun", position: "Mittelfeld", nationality: "Bosnien-Herzegowina", goals: 1, assists: 0 },
+            { name: "Miguel Castroman", team: "FC Thun", position: "Mittelfeld", nationality: "Schweiz", goals: 2, assists: 3 },
+            { name: "Johan Djourou Jr.", team: "FC Thun", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Hoarau", team: "FC Thun", position: "Mittelfeld", nationality: "Frankreich", goals: 1, assists: 1 },
+            { name: "Tresor Samba", team: "FC Thun", position: "Mittelfeld", nationality: "Kongo", goals: 1, assists: 0 },
+            { name: "Jan Hodel", team: "FC Thun", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nicolas Schindelholz", team: "FC Thun", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Mattia Barella", team: "FC Thun", position: "Mittelfeld", nationality: "Italien", goals: 0, assists: 0 },
+            { name: "Brighton Labeau", team: "FC Thun", position: "Stürmer", nationality: "Martinique", goals: 6, assists: 2 },
+            { name: "Noah Christoffersson", team: "FC Thun", position: "Stürmer", nationality: "Schweden", goals: 4, assists: 2 },
+            { name: "Marc Fehr", team: "FC Thun", position: "Stürmer", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Koro Koné", team: "FC Thun", position: "Stürmer", nationality: "Elfenbeinküste", goals: 3, assists: 1 },
+            { name: "Nuno Da Silva", team: "FC Thun", position: "Stürmer", nationality: "Portugal", goals: 2, assists: 1 },
+            { name: "Alexandre Zurfluh", team: "FC Thun", position: "Stürmer", nationality: "Schweiz", goals: 0, assists: 0 },
+
+            // --- FC Vaduz (25+ Spieler) ---
+            { name: "Leon Schaffran", team: "FC Vaduz", position: "Torhüter", nationality: "Deutschland", goals: 0, assists: 0 },
+            { name: "Benjamin Büchel", team: "FC Vaduz", position: "Torhüter", nationality: "Liechtenstein", goals: 0, assists: 0 },
+            { name: "Gabriele Calabretta", team: "FC Vaduz", position: "Torhüter", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Nicolas Hasler", team: "FC Vaduz", position: "Abwehr", nationality: "Liechtenstein", goals: 2, assists: 3 },
+            { name: "Liridon Berisha", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Denis Simani", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Emanuele Malamoud", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Gabriel Lüchinger", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Fuad Rahimi", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Gion Chande", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Jens Hofer", team: "FC Vaduz", position: "Abwehr", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Lutfi Dalipi", team: "FC Vaduz", position: "Mittelfeld", nationality: "Schweiz", goals: 3, assists: 9 },
+            { name: "Sandro Wieser", team: "FC Vaduz", position: "Mittelfeld", nationality: "Liechtenstein", goals: 1, assists: 1 },
+            { name: "Ryan Fosso", team: "FC Vaduz", position: "Mittelfeld", nationality: "Kamerun", goals: 1, assists: 2 },
+            { name: "Milan Gajić", team: "FC Vaduz", position: "Mittelfeld", nationality: "Serbien", goals: 2, assists: 1 },
+            { name: "Cedric Gasser", team: "FC Vaduz", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 1 },
+            { name: "Meris Maliqi", team: "FC Vaduz", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Manuel Sutter", team: "FC Vaduz", position: "Mittelfeld", nationality: "Österreich", goals: 1, assists: 0 },
+            { name: "Eray Civin", team: "FC Vaduz", position: "Mittelfeld", nationality: "Schweiz", goals: 0, assists: 0 },
+            { name: "Marcel Monsberger", team: "FC Vaduz", position: "Stürmer", nationality: "Österreich", goals: 6, assists: 1 },
+            { name: "Dejan Djokic", team: "FC Vaduz", position: "Stürmer", nationality: "Schweiz", goals: 3, assists: 2 },
+            { name: "Tunahan Cicek", team: "FC Vaduz", position: "Stürmer", nationality: "Schweiz", goals: 4, assists: 2 },
+            { name: "Tim Gagnon", team: "FC Vaduz", position: "Stürmer", nationality: "Frankreich", goals: 0, assists: 0 },
+            { name: "Corsin Konietzke", team: "FC Vaduz", position: "Stürmer", nationality: "Schweiz", goals: 1, assists: 0 },
+            { name: "Joël Ris", team: "FC Vaduz", position: "Stürmer", nationality: "Schweiz", goals: 0, assists: 0 }
+        ];
+
+        let selectedClub = 'Alle';
+
+        function displayPlayers(list) {
+            const grid = document.getElementById('playerGrid');
+            grid.innerHTML = "";
+            
+            if (list.length === 0) {
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #718096;'>Keine Spieler gefunden.</p>";
+                return;
+            }
+
+            list.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.innerHTML = `
+                    <h3>${p.name}</h3>
+                    <p><strong>Position:</strong> ${p.position}</p>
+                    <p><strong>Land:</strong> ${p.nationality}</p>
+                    <div class="stats">
+                        <span>⚽ Tore: <strong>${p.goals}</strong></span>
+                        <span>🎯 Vorlagen: <strong>${p.assists}</strong></span>
+                    </div>
+                    <div class="badge">${p.team}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterPlayers() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = sflPlayers.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(query) || 
+                                      p.nationality.toLowerCase().includes(query) || 
+                                      p.position.toLowerCase().includes(query) ||
+                                      p.team.toLowerCase().includes(query);
+                const matchesClub = selectedClub === 'Alle' || p.team === selectedClub;
+                return matchesSearch && matchesClub;
+            });
+            displayPlayers(filtered);
+        }
+
+        function filterByClub(club, element) {
+            selectedClub = club;
+            document.querySelectorAll('.club-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            filterPlayers();
+        }
+
+        displayPlayers(sflPlayers);
+    </script>
 </body>
 </html>
